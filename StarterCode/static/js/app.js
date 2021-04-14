@@ -4,7 +4,7 @@ var gaugePlot = d3.select("#gauge");
 var bubblePlot = d3.select("#bubble");
 var dropdown = d3.select("#sample-metadata");
 //var sample = dropdown.node().value
-var sample = "940"
+var sample = "956"
 //add unpack function
 function unpack(rows, index) {
     return rows.map(function(row) {
@@ -21,12 +21,13 @@ d3.json("./data/samples.json")
      names = data.names;
      metadata = data.metadata;
      samples = data.samples;
-    //  console.log(names)
-    //  console.log(metadata)
-    //  console.log(samples)
+     console.log(names)
+     console.log(metadata)
+     console.log(samples)
      if (names.indexOf(sample) !== -1){
-         console.log(samples[sample.index]);
-         names = 
+         var indexValue = names.indexOf(sample)
+         console.log(indexValue)
+         console.log(metadata[indexValue])
      }
 })
 }
