@@ -1,9 +1,11 @@
-//set up ables for plot locations on page
+//set up variables for locations on page
 var barChart = d3.select("#bar");
 var gaugePlot = d3.select("#gauge");
 var bubblePlot = d3.select("#bubble");
-var dropdown = d3.select("#sample-metadata");
+var dropdown = d3.select("select");
+
 //var sample = dropdown.node().value
+var data = d3.json("./data/samples.json")
 var sample = "956"
 //add unpack function
 function unpack(rows, index) {
@@ -11,12 +13,23 @@ function unpack(rows, index) {
     return row[index];
     });
     }
+
+//initialize page function
+function init() {
+data.then(function(nameDropdown) {
+    Object.entries(nameDropdown.names).forEach(function([key, value]) {
+    var options = dropdown.append("option")
+    options.text(value)
+    })
+    
+})
+};
 //create function & variables for data
 var names;
 var metadata;
 var samples;
 function getTableData(sample){
-d3.json("./data/samples.json")
+data
 .then(function(data) {
      names = data.names;
      metadata = data.metadata;
@@ -33,6 +46,7 @@ d3.json("./data/samples.json")
 }
 
 getTableData(sample)
+init();
 
     
 
