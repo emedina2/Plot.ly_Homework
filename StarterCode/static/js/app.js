@@ -17,35 +17,37 @@ function unpack(rows, index) {
     }
 
 //Detect dropdown change
-dropdown.on("onchange",function(event){
-    console.log(event)
+dropdown.on("onchange",function(){
+    console.log(this)
 } )
-
-
-//append data to metadata box
-function filterData(metadata) {
-    metadata.id === sample
-}
-function addMetadata([key, value]) {
-    sampleMetadata.append("p")
-    .text(`${key} : ${value}`)
-}
 
 //initialize page function
 function init() {
-data.then(function(nameDropdown) {
-    Object.entries(nameDropdown.names).forEach(function([key, value]) {
-    var options = dropdown.append("option")
-    .attr('value', value)
-    options.text(value)
+    data.then(function(nameDropdown) {
+        Object.entries(nameDropdown.names).forEach(function([key, value]) {
+        var options = dropdown.append("option")
+        .attr('value', value)
+        options.text(value)
+        })
+       
     })
-    Object.entries(nameDropdown.metadata)
-    .filter(filterData)
-    .forEach(addMetadata)
-    console.log(`The selected Subject is ${selection}`)  
+    };
+
+//filter data based on dropdown selection
+function filterData(metadata) {
+    metadata.id === sample
+   console.log(metadata)
     
-})
-};
+}
+//append data to metadata box
+function addMetadata([key, value]) {
+    var metadataContent = sampleMetadata.append("p")
+    metadataContent.text(`${key} : ${value}`)
+    console.log(key, value)
+    console.log(sample)
+}
+
+
 //create function & variables for data
 var names;
 var metadata;
@@ -67,8 +69,11 @@ data
 })
 }
 
-getTableData(sample)
+//getTableData(sample)
 init();
+testData(data)
+
+
 
     
 
