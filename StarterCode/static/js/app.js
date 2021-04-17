@@ -8,7 +8,11 @@ var selection;
 
 //var sample = dropdown.node().value
 var data = d3.json("./data/samples.json")
-var sample = "956"
+var test = data.then(function(result) {
+    return result.metadata
+})
+
+var sample = 940
 //add unpack function
 function unpack(rows, index) {
     return rows.map(function(row) {
@@ -17,44 +21,42 @@ function unpack(rows, index) {
     }
 
 //Detect dropdown change
-dropdown.on("onchange",function(){
+function optionChanged() {dropdown.on("onchange",function(){
     console.log(this)
-} )
+})
+};
 
 //initialize page function
 function init() {
-    data.then(function(nameDropdown) {
-        Object.entries(nameDropdown.names).forEach(function([key, value]) {
+    data.then(function(samples) {
+        Object.entries(samples.names).forEach(function([key, value]) {
         var options = dropdown.append("option")
         .attr('value', value)
         options.text(value)
-        })
-       
+                })
+      
+        
     })
     };
 
 //filter data based on dropdown selection
 function filterData(metadata) {
     metadata.id === sample
-   console.log(metadata)
+    console.log(metadata)
     
 }
 //append data to metadata box
-function addMetadata([key, value]) {
-    var metadataContent = sampleMetadata.append("p")
-    metadataContent.text(`${key} : ${value}`)
-    console.log(key, value)
-    console.log(sample)
-}
+
+
 
 
 //create function & variables for data
 var names;
 var metadata;
 var samples;
+
 function getTableData(sample){
-data
-.then(function(data) {
+data.then(function(data) {
      names = data.names;
      metadata = data.metadata;
      samples = data.samples;
@@ -66,15 +68,34 @@ data
          console.log(indexValue)
          console.log(metadata[indexValue])
      }
+     
 })
 }
 
 //getTableData(sample)
 init();
-testData(data)
 
+testing();
+
+function testing(){
+    data.then(function(testdata) {
+        var testingdata = testdata.metadata.filter(d => d.id === sample)
+        console.log(testingdata)
+        var datavalues = Object.values(testingdata)
+        console.log(datavalues[0])
+        
+        var addData = sampleMetadata.append("p")
+        const filtered = datavalues[0]
+        for (const[key,value] of Object.entries(filtered)) {
+            addData.text(key + ':' + value)
+            console.log(`${key} : ${value}`)
+        }
+        
+        
+
+        })
+    };
+      
 
 
     
-
-
