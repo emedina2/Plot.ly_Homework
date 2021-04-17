@@ -6,14 +6,15 @@ var dropdown = d3.select("select");
 var sampleMetadata = d3.select("#sample-metadata");
 var selection = dropdown.property("value");
 
-
-var names;
 var metadata;
 var samples;
+var index;
 
 //import json file
 var data = d3.json("./data/samples.json")
+var names ;
 
+console.log(names)
 //add unpack function
 function unpack(rows, index) {
     return rows.map(function(row) {
@@ -21,9 +22,20 @@ function unpack(rows, index) {
     });
     }
 
+ //get index
+function getIndex(selected){
+    data.then(function(results) {
+        var named = results.names
+        index = named.indexOf(selected)
+        console.log(selected)
+        console.log(index)
+        return index
+    })
+};
+
 //Detect dropdown change
 function optionChanged(dropdownSelection){
-    dropdown.on("onchange", getMetadata(dropdownSelection))
+    dropdown.on("onchange", updatePage(dropdownSelection))
 };
 
 //initialize page function
@@ -34,46 +46,29 @@ function init() {
         .attr('value', value)
         options.text(value)
      }) 
-       
     })
-    getMetadata(940)
+    updatePage(940)
     };
 
-//filter data based on dropdown selection
-function filterData(metadata) {
-    metadata.id === sample
-    console.log(metadata)   
-}
 //append data to metadata box
-function getMetadata(samplenumber){
+function updatePage(samplenumber){
     data.then(function(sampledata) {
         var filtered = sampledata.metadata.filter(d => d.id === parseInt(samplenumber))
-        //console.log(filtered)
         var datavalues = Object.values(filtered)
         const filteredData = datavalues[0]
         //console.log(filteredData)
+        sampleMetadata.html("")
         for (const[key,value] of Object.entries(filteredData)) {
             sampleMetadata.append("p").text(key + ' : ' + value)
             //console.log(`${key} : ${value}`)
         }
-            })
+    })
+    
+    var newIndex = getIndex(samplenumber)
+    console.log(newIndex)
     };
 
-function getTableData(samplenumber){
-    data.then(function(sampledata) {
-        var filtered = sampledata.samples.filter(d => d.id === parseInt(samplenumber))
-        console.log(filtered)
-        var datavalues = Object.values(filtered)
-        const filteredData = datavalues[0]
-        console.log(filteredData)
-        for (const[key,value] of Object.entries(filteredData)) {
-            console.log(`${key} : ${value}`)
-        }
-            })
-}
 
-
-init();
 
 function sampleTest (sampleID){
     data.then(function(sampledata) {
@@ -91,13 +86,8 @@ function sampleTest (sampleID){
     console.log(otuIDs)
     console.log(otuLabels)
     })   
-}
+};
+
+
+init();
 sampleTest("940");
-
-
-
-
-      
-
-
-    
