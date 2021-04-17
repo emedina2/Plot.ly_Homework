@@ -12,9 +12,7 @@ var index;
 
 //import json file
 var data = d3.json("./data/samples.json")
-var names ;
 
-console.log(names)
 //add unpack function
 function unpack(rows, index) {
     return rows.map(function(row) {
@@ -33,10 +31,30 @@ function getIndex(selected){
     })
 };
 
+
 //Detect dropdown change
 function optionChanged(dropdownSelection){
     dropdown.on("onchange", updatePage(dropdownSelection))
 };
+
+//Grab values for bar chart
+function getBar(selectedIndex){
+    data.then(function(sampledata) {
+        var sampleSamples = sampledata.samples
+        var expanddata = Object.entries(sampleSamples)
+        var values = unpack(expanddata,1)
+        var filteredSample = values[selectedIndex]
+        console.log(filteredSample)
+        var sampleValues = filteredSample.sample_values
+        var otuIDs = filteredSample.otu_ids
+        var otuLabels = filteredSample.otu_labels
+        console.log(sampleValues)
+        console.log(otuIDs)
+        console.log(otuLabels)
+        })   
+}
+
+getBar(1)
 
 //initialize page function
 function init() {
@@ -50,10 +68,10 @@ function init() {
     updatePage(940)
     };
 
-//append data to metadata box
-function updatePage(samplenumber){
+//Update page data
+function updatePage(sampleNumber){
     data.then(function(sampledata) {
-        var filtered = sampledata.metadata.filter(d => d.id === parseInt(samplenumber))
+        var filtered = sampledata.metadata.filter(d => d.id === parseInt(sampleNumber))
         var datavalues = Object.values(filtered)
         const filteredData = datavalues[0]
         //console.log(filteredData)
@@ -63,31 +81,9 @@ function updatePage(samplenumber){
             //console.log(`${key} : ${value}`)
         }
     })
-    
-    var newIndex = getIndex(samplenumber)
-    console.log(newIndex)
+    var sampleIndex = getIndex(sampleNumber)
+    getBar(sampleIndex)
+    console.log(samplenumber)
     };
 
-
-
-function sampleTest (sampleID){
-    data.then(function(sampledata) {
-    var sampleSamples = sampledata.samples
-    var expanddata = Object.entries(sampleSamples)
-    
-    var values = unpack(expanddata,1)
-    
-    var filteredSample = values.filter(d => d.id=== sampleID)
-    console.log(filteredSample)
-    var sampleValues = filteredSample.map(d=> d.sample_values)
-    var otuIDs = filteredSample.map(d => d.otu_ids)
-    var otuLabels = filteredSample.map(d => d.otu_labels)
-    console.log(sampleValues)
-    console.log(otuIDs)
-    console.log(otuLabels)
-    })   
-};
-
-
-init();
-sampleTest("940");
+    init();
