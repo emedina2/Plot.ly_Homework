@@ -48,13 +48,13 @@ function filterData(metadata) {
 function getMetadata(samplenumber){
     data.then(function(sampledata) {
         var filtered = sampledata.metadata.filter(d => d.id === parseInt(samplenumber))
-        console.log(filtered)
+        //console.log(filtered)
         var datavalues = Object.values(filtered)
         const filteredData = datavalues[0]
-        console.log(filteredData)
+        //console.log(filteredData)
         for (const[key,value] of Object.entries(filteredData)) {
             sampleMetadata.append("p").text(key + ' : ' + value)
-            console.log(`${key} : ${value}`)
+            //console.log(`${key} : ${value}`)
         }
             })
     };
@@ -78,20 +78,23 @@ init();
 function sampleTest (sampleID){
     data.then(function(sampledata) {
     var sampleSamples = sampledata.samples
-    var filteredSample = sampleSamples.filter(d => d.id === 940)
+    var expanddata = Object.entries(sampleSamples)
+    
+    var values = unpack(expanddata,1)
+    
+    var filteredSample = values.filter(d => d.id=== sampleID)
     console.log(filteredSample)
+    var sampleValues = filteredSample.map(d=> d.sample_values)
+    var otuIDs = filteredSample.map(d => d.otu_ids)
+    var otuLabels = filteredSample.map(d => d.otu_labels)
+    console.log(sampleValues)
+    console.log(otuIDs)
+    console.log(otuLabels)
     })   
 }
 sampleTest("940");
 
-data.then(function(sampledata) {
-    var filtered = sampledata.samples.filter(d => d.id === 940)
-    console.log(filtered)
-    var datavalues = Object.values(filtered)
-    const filteredData = datavalues
-    console.log(filteredData)
-    
-        })
+
 
 
       
