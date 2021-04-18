@@ -78,7 +78,7 @@ function charts(selectedIndex){
             }
         }]
         Plotly.newPlot("bar", barTrace)
-        Plotly.newPlot("bubble", bubbleTrace)
+        Plotly.newPlot("bubble", bubbleTrace, {xaxis: {title: "OTU ID"}})
         })   
 };
 
