@@ -15,20 +15,20 @@ var data = d3.json("./data/samples.json")
 
 //add unpack function
 function unpack(rows, index) {
-    return rows.map(function(row) {
-    return row[index];
-    });
-    }
+    return rows.map(
+        function(row) {
+            return row[index];
+        });
+}
 
  //get index
-function getIndex(selected){
-    data.then(function(results) {
+function getIndex(selected, results){
         var named = results.names
         index = named.indexOf(selected)
+        console.log(named)
         console.log(selected)
         console.log(index)
         return index
-    })
 };
 
 
@@ -55,14 +55,26 @@ function charts(selectedIndex){
         var top10_IDs = otuIDs.slice(0,10)
         var top10_Labels = otuLabels.slice(0,10)
         //console.log(otuLabels)
-        var trace1 = [{
+        var barTrace = [{
             x: top10_Values,
             y: top10_IDs,
+            text: top10_Labels,
             type: "bar",
             orientation: 'h'
            
         }];
-        Plotly.newPlot("bar", trace1)
+        var bubbleTrace = [{
+            x: otuIDs,
+            y: sampleValues,
+            text: otuLabels,
+            mode: 'markers',
+            marker: {
+                size: sampleValues,
+                color: otuIDs
+            }
+        }]
+        Plotly.newPlot("bar", barTrace)
+        Plotly.newPlot("bubble", bubbleTrace)
         })   
 };
 
@@ -93,11 +105,13 @@ function updatePage(sampleNumber){
         for (const[key,value] of Object.entries(filteredData)) {
             sampleMetadata.append("p").text(key + ' : ' + value)
             //console.log(`${key} : ${value}`)
+           
         }
+        var sampleIndex = getIndex(sampleNumber, sampledata)
+        console.log(sampleIndex)
     })
-    var sampleIndex = getIndex(sampleNumber)
-    console.log(`Sample Index value is ${sampleIndex}`)
-    };
+   
+};
 
     init();
 
